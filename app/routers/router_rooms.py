@@ -1,10 +1,10 @@
 from aiogram import Router, F
-from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import Message, ReplyKeyboardRemove
 import re
 from datetime import datetime
+from app.databases.db_handler import UserDatabase
 
 from app.keyboards import keyboards
 
@@ -70,6 +70,8 @@ async def book(message: Message, state: FSMContext):
     keyboard = keyboards.start_kb()
     if is_time_valid(message.text):
         await state.update_data(chosen_time = message.text.lower())
+        data = await state.get_data()
+        
         await message.answer('Комната забронирована! На этом моменте отправляется лог в студ', reply_markup=keyboard)
         await state.clear()
     else:
